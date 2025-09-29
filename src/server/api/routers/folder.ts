@@ -2,7 +2,7 @@ import z from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const folderRouter = createTRPCRouter({
-  getAllFolder: publicProcedure.query(async ({ ctx }) => {
+  getAllFolders: publicProcedure.query(async ({ ctx }) => {
     const { db } = ctx;
     const folder = await db.folder.findMany({
       select: {
@@ -27,9 +27,23 @@ export const folderRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;
       const { name } = input;
-      return db.folder.create({
+      const createFolder = await db.folder.create({
         data: {
           name,
+        },
+      });
+
+      return createFolder;
+    }),
+
+  deleteFolder: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { db } = ctx;
+      const { id } = input;
+      return await db.folder.delete({
+        where: {
+          id,
         },
       });
     }),

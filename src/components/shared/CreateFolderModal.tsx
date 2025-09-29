@@ -1,8 +1,9 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FolderPlus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { folderSchema, type FolderSchema } from "~/schemas/folderSchema";
 import { api } from "~/trpc/react";
 import { Button } from "../ui/button";
 import {
@@ -17,12 +18,13 @@ import {
 } from "../ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
+import { createFolderSchema, type CreateFolderSchema } from "~/schemas/folderSchema";
 
 const ModalAddFolder = () => {
   const [open, setOpen] = useState(false);
 
-  const form = useForm<FolderSchema>({
-    resolver: zodResolver(folderSchema),
+  const form = useForm<CreateFolderSchema>({
+    resolver: zodResolver(createFolderSchema),
     defaultValues: {
       name: "",
     },
@@ -34,12 +36,15 @@ const ModalAddFolder = () => {
     onSuccess: async () => {
       form.reset();
       setOpen(false);
+      await apiUtils.folder.getAllFolders.invalidate();
+    },
 
-      await apiUtils.folder.getAllFolder.invalidate();
+    onError: (error) => {
+      console.error("Create folder error:", error); // 👈 lihat errornya
     },
   });
 
-  const onSubmit = (values: FolderSchema) => {
+  const onSubmit = (values: CreateFolderSchema) => {
     createFolder.mutate({ name: values.name });
   };
 
@@ -78,8 +83,8 @@ const ModalAddFolder = () => {
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit">
-                {createFolder.isPending ? "loading..." : "Create"}
+              <Button type="submit" disabled={createFolder.isPending}>
+                {createFolder.isPending ? "Creating..." : "Create"}
               </Button>
             </DialogFooter>
           </form>

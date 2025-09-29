@@ -10,6 +10,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { api } from "~/trpc/react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
@@ -25,9 +26,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import { usePathname } from "next/navigation";
-import { ToggleTheme } from "./ToggleTheme";
+import AlertDeleteFolder from "./AlertDeleteFolder";
 import CreateFolderModal from "./CreateFolderModal";
+import { ToggleTheme } from "./ToggleTheme";
 
 const recents = [
   { title: "Reflections on June", url: "#", icon: FileText },
@@ -42,10 +43,9 @@ const mores = [
 ];
 
 export function AppSidebar() {
-  const { isLoading, data } = api.folder.getAllFolder.useQuery();
+  const { isLoading, data } = api.folder.getAllFolders.useQuery();
 
   const pathname = usePathname();
-  
 
   return (
     <Sidebar>
@@ -85,7 +85,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <div className="flex items-center justify-between">
             <SidebarGroupLabel>Folders</SidebarGroupLabel>
-            <CreateFolderModal/>
+            <CreateFolderModal />
           </div>
           <Separator className="mt-2 mb-1" />
           <SidebarGroupContent>
@@ -96,13 +96,17 @@ export function AppSidebar() {
                 const active = folder.name === pathnameEncoded.split("/")[1];
                 const Icon = active ? FolderOpen : Folder;
                 return (
-                  <SidebarMenuItem key={folder.id}>
+                  <SidebarMenuItem
+                    className="flex items-center justify-between"
+                    key={folder.id}
+                  >
                     <SidebarMenuButton isActive={active} asChild>
                       <Link href={`/${folder.name}`}>
                         <Icon />
                         <span>{folder.name}</span>
                       </Link>
                     </SidebarMenuButton>
+                    <AlertDeleteFolder folder={folder} />
                   </SidebarMenuItem>
                 );
               })}
