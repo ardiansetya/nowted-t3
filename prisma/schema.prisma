@@ -30,4 +30,8 @@ model Folder {
     notes     Note[]
 }
 
-
+model Profile {
+    userId String @id
+    email String @unique
+    username String @unique
+}

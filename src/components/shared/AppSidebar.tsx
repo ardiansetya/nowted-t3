@@ -26,6 +26,8 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { usePathname } from "next/navigation";
+import { ToggleTheme } from "./ToggleTheme";
+import CreateFolderModal from "./CreateFolderModal";
 
 const recents = [
   { title: "Reflections on June", url: "#", icon: FileText },
@@ -81,7 +83,10 @@ export function AppSidebar() {
 
         {/* Folders */}
         <SidebarGroup>
-          <SidebarGroupLabel>Folders</SidebarGroupLabel>
+          <div className="flex items-center justify-between">
+            <SidebarGroupLabel>Folders</SidebarGroupLabel>
+            <CreateFolderModal/>
+          </div>
           <Separator className="mt-2 mb-1" />
           <SidebarGroupContent>
             <SidebarMenu>
@@ -128,6 +133,8 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <div className="flex items-center justify-between px-4 py-3">
+          <ToggleTheme />
+
           <span className="text-muted-foreground text-sm">
             Mock Footer / User
           </span>

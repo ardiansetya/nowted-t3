@@ -1,3 +1,4 @@
+import z from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const folderRouter = createTRPCRouter({
@@ -20,4 +21,16 @@ export const folderRouter = createTRPCRouter({
 
     return folder;
   }),
+
+  createFolder: publicProcedure
+    .input(z.object({ name: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { db } = ctx;
+      const { name } = input;
+      return db.folder.create({
+        data: {
+          name,
+        },
+      });
+    }),
 });
