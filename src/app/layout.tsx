@@ -3,7 +3,10 @@ import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
+import { ThemeProvider } from "~/components/providers/ThemeProvider";
+import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
 import { TRPCReactProvider } from "~/trpc/react";
+import { AppSidebar } from "~/components/shared/AppSidebar";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -20,9 +23,24 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
+    <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TRPCReactProvider>
+            <SidebarProvider>
+              <AppSidebar />
+              <main>
+                <SidebarTrigger />
+                {children}
+              </main>
+            </SidebarProvider>
+          </TRPCReactProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -8,13 +8,26 @@ generator client {
 datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
+model Note {
+    id        String      @id @default(cuid())
+    name      String      @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    folderId  String    
+    folder    Folder    @relation(fields: [folderId], references: [id])
 
     @@index([name])
 }
+
+model Folder {
+    id        String      @id @default(cuid())
+    name      String   @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    notes     Note[]
+}
+
+
