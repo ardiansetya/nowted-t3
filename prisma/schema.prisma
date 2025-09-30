@@ -6,24 +6,25 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
     directUrl = env("DIRECT_URL")
 }
 
 model Note {
-    id        String      @id @default(cuid())
-    name      String      @unique
+    id        String   @id @default(cuid())
+    title     String   @unique
+    content   String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    folderId  String    
-    folder    Folder    @relation(fields: [folderId], references: [id])
+    folderId  String
+    folder    Folder   @relation(fields: [folderId], references: [id])
 
-    @@index([name])
+    @@index([title])
 }
 
 model Folder {
-    id        String      @id @default(cuid())
+    id        String   @id @default(cuid())
     name      String   @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -31,7 +32,7 @@ model Folder {
 }
 
 model Profile {
-    userId String @id
-    email String @unique
+    userId   String @id
+    email    String @unique
     username String @unique
 }

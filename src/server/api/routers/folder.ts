@@ -11,7 +11,8 @@ export const folderRouter = createTRPCRouter({
         updatedAt: true,
         notes: {
           select: {
-            name: true,
+            title: true,
+            content: true,
             folderId: true,
             id: true,
           },

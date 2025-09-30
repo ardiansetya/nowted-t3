@@ -4,7 +4,7 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
 import { ThemeProvider } from "~/components/providers/ThemeProvider";
-import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
+import { SidebarProvider } from "~/components/ui/sidebar";
 import { TRPCReactProvider } from "~/trpc/react";
 import { AppSidebar } from "~/components/shared/AppSidebar";
 
@@ -34,7 +34,7 @@ export default function RootLayout({
           <TRPCReactProvider>
             <SidebarProvider>
               <AppSidebar />
-              <main>
+              <main className="flex flex-1 flex-col">
                 {children}
               </main>
             </SidebarProvider>
