@@ -7,6 +7,7 @@ import { ThemeProvider } from "~/components/providers/ThemeProvider";
 import { SidebarProvider } from "~/components/ui/sidebar";
 import { TRPCReactProvider } from "~/trpc/react";
 import { AppSidebar } from "~/components/shared/AppSidebar";
+import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -37,6 +38,7 @@ export default function RootLayout({
               <main className="flex flex-1 flex-col">
                 {children}
               </main>
+              <Toaster/>
             </SidebarProvider>
           </TRPCReactProvider>
         </ThemeProvider>

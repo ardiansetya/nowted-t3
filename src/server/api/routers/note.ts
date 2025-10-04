@@ -46,7 +46,7 @@ export const noteRouter = createTRPCRouter({
       });
     }),
 
-    getNoteById: publicProcedure
+  getNoteById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {
       const { id } = input;
@@ -68,5 +68,24 @@ export const noteRouter = createTRPCRouter({
           },
         },
       });
-    })
+    }),
+  updateNote: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().optional(),
+        content: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...data } = input;
+
+      return await ctx.db.note.update({
+        where: { id },
+        data: {
+          ...data,
+          updatedAt: new Date(),
+        },
+      });
+    }),
 });

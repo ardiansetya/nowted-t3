@@ -1,4 +1,5 @@
 import FolderHeader from "~/components/shared/FolderHeader";
+import NoteEditor from "~/components/shared/NoteEditor";
 import NotesList from "~/components/shared/NotesList";
 import { api } from "~/trpc/server";
 
@@ -7,21 +8,36 @@ const FolderPage = async ({
 }: {
   params: Promise<{ slug: string[] }>;
 }) => {
-  const note = await api.note.getNoteById({ id: (await params).slug[1] ?? "" });
+  const { slug } = await params;
+  const folderName = slug[0] ?? "";
+  const noteId = slug[1];
+
+  // Fetch note only if noteId exists
+  const note = noteId ? await api.note.getNoteById({ id: noteId }) : null;
 
   return (
-    <div className="bg-accent flex min-h-full">
-      <div className="w-1/4 px-4">
-        <FolderHeader folderName={(await params).slug[0] ?? ""} />
-        <NotesList folderName={(await params).slug[0] ?? ""} />
+    <div className="flex min-h-screen">
+      {/* Sidebar - Notes List */}
+      <div className="bg-accent w-1/4 border-r">
+        <FolderHeader folderName={folderName} />
+        <NotesList folderName={folderName} />
       </div>
-      {(await params).slug[1] && (
-        <div className="bg-background w-3/4">
-          <div className="p-4">
-            <h1 className="text-2xl font-bold">{note?.title}</h1>
+
+      {/* Main Content - Note Editor */}
+      <div className="flex-1">
+        {note ? (
+          <NoteEditor note={note} />
+        ) : (
+          <div className="text-muted-foreground flex h-full items-center justify-center">
+            <div className="space-y-2 text-center">
+              <p className="text-lg font-medium">No note selected</p>
+              <p className="text-sm">
+                Select a note from the list to start editing
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
