@@ -25,12 +25,16 @@ export const useNoteEditor = ({
   const updateNote = api.note.updateNote.useMutation({
     onSuccess: async () => {
       setHasChanges(false);
-      toast("Note saved successfully");
+      toast.success("Note saved successfully", {
+        description: new Date().toLocaleString(),
+      });
       await utils.note.getNoteById.invalidate({ id: noteId });
       await utils.note.getAllNotesByFolderName.invalidate();
     },
     onError: (error) => {
-      toast("Failed to save note - " + error.message);
+      toast.error("Failed to save note - " + error.message, {
+        
+      });
     },
   });
 
@@ -57,7 +61,9 @@ export const useNoteEditor = ({
   // Update editor content when note changes
   useEffect(() => {
     if (editor && initialContent !== editor.getHTML()) {
-      editor.commands.setContent(initialContent);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const content: Record<string, unknown> = JSON.parse(initialContent);
+      editor.commands.setContent(content);
     }
   }, [initialContent, editor]);
 
