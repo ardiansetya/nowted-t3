@@ -20,6 +20,28 @@ export const noteRouter = createTRPCRouter({
     });
   }),
 
+  getRecentNotes: publicProcedure.query(({ ctx }) => {
+    return ctx.db.note.findMany({
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        folderId: true,
+        updatedAt: true,
+        createdAt: true,
+        folder: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+      take: 5,
+    });
+  }),
+
   getAllNotesByFolderName: publicProcedure
     .input(z.object({ folderName: z.string() }))
     .query(({ ctx, input }) => {

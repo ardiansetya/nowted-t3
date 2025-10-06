@@ -1,18 +1,17 @@
 "use client";
 
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import {
   FileText,
   Folder,
   FolderArchive,
   FolderOpen,
-  Search,
   StarIcon,
-  Trash2Icon,
+  Trash2Icon
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { api } from "~/trpc/react";
-import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import {
   Sidebar,
@@ -28,15 +27,9 @@ import {
 } from "../ui/sidebar";
 import AlertDeleteFolder from "./AlertDeleteFolder";
 import CreateFolderModal from "./CreateFolderModal";
-import { ToggleTheme } from "./ToggleTheme";
-import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import ModalNewNote from "./ModalNewNote";
+import { ToggleTheme } from "./ToggleTheme";
 
-const recents = [
-  { title: "Reflections on June", url: "#", icon: FileText },
-  { title: "Project Proposal", url: "#", icon: FileText },
-  { title: "Travel Itinerary", url: "#", icon: FileText },
-];
 
 const mores = [
   { title: "Favorites", url: "/favorites", icon: StarIcon },
@@ -46,6 +39,7 @@ const mores = [
 
 export function AppSidebar() {
   const { isLoading, data } = api.folder.getAllFolders.useQuery();
+  const { data: recents } = api.note.getRecentNotes.useQuery();
 
 
   const pathname = usePathname();
@@ -70,11 +64,11 @@ export function AppSidebar() {
           <Separator className="my-1" />
           <SidebarGroupContent>
             <SidebarMenu>
-              {recents.map((recent) => (
+              {recents?.map((recent) => (
                 <SidebarMenuItem key={recent.title}>
                   <SidebarMenuButton asChild>
-                    <Link href={recent.url}>
-                      <recent.icon />
+                    <Link href={`/${recent.folder.name}/${recent.id}`}>
+                      <FileText />
                       <span>{recent.title}</span>
                     </Link>
                   </SidebarMenuButton>
