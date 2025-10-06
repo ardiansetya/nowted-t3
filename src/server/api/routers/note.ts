@@ -43,6 +43,9 @@ export const noteRouter = createTRPCRouter({
             },
           },
         },
+        orderBy: {
+          updatedAt: "desc",
+        }
       });
     }),
 
@@ -68,6 +71,23 @@ export const noteRouter = createTRPCRouter({
           },
         },
       });
+    }),
+
+    createNote: publicProcedure
+    .input(z.object({ title: z.string(), folderId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const {db} = ctx;
+      const { title, folderId } = input;
+      return await db.note.create({
+        data: {
+          title,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          folderId,
+
+        },
+      });
+
     }),
   updateNote: publicProcedure
     .input(

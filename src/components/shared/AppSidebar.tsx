@@ -29,6 +29,8 @@ import {
 import AlertDeleteFolder from "./AlertDeleteFolder";
 import CreateFolderModal from "./CreateFolderModal";
 import { ToggleTheme } from "./ToggleTheme";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import ModalNewNote from "./ModalNewNote";
 
 const recents = [
   { title: "Reflections on June", url: "#", icon: FileText },
@@ -45,7 +47,10 @@ const mores = [
 export function AppSidebar() {
   const { isLoading, data } = api.folder.getAllFolders.useQuery();
 
+
   const pathname = usePathname();
+  const {isSignedIn} = useUser()
+
 
   return (
     <Sidebar>
@@ -54,9 +59,7 @@ export function AppSidebar() {
           <Link href={"/"} className="text-xl font-bold">
             Nowted
           </Link>
-          <Button variant="ghost" size="icon">
-            <Search />
-          </Button>
+          <ModalNewNote/>
         </div>
       </SidebarHeader>
 
@@ -140,7 +143,7 @@ export function AppSidebar() {
           <ToggleTheme />
 
           <span className="text-muted-foreground text-sm">
-            Mock Footer / User
+            {isSignedIn ? <UserButton /> : <SignInButton />}
           </span>
         </div>
       </SidebarFooter>
