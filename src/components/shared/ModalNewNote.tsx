@@ -63,7 +63,7 @@ const ModalNewNote = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Your note</DialogTitle>
+          <DialogTitle>Add Your Note</DialogTitle>
           <DialogDescription>
             Enter the name of your new note below.
           </DialogDescription>
@@ -75,7 +75,7 @@ const ModalNewNote = () => {
               name="title"
               render={({ field }) => (
                 <FormItem className="mb-4 grid w-full max-w-sm items-center gap-2">
-                  <FormLabel htmlFor="name">note Name</FormLabel>
+                  <FormLabel htmlFor="name">Note Title</FormLabel>
                   <FormControl>
                     <Input id="name" placeholder="Name" {...field} />
                   </FormControl>
@@ -91,7 +91,7 @@ const ModalNewNote = () => {
               render={({ field }) => (
                 <FormItem className="mb-4 grid w-full max-w-sm items-center gap-2">
                   <FormLabel htmlFor="folderId">Folder Name</FormLabel>
-                  <FormControl>
+                  <FormControl className="w-full">
                     <FolderCombobox onChange={field.onChange} value={field.value}/>
                   </FormControl>
                   <p className="text-sm text-red-400">
